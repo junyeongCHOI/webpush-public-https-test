@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./favicon.png" />
+    <title>1</title>
+    <style>
+      html,
+      body {
+        display: flex;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+          Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+        color: #222;
+        font-size: 14px;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      #__next {
+        display: flex;
+        justify-content: center;
+      }
+
+      .container {
+        width: 860px;
+        padding: 32px 0;
+      }
+
+      .title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #1d4289;
+      }
+
+      .init-state {
+        margin: 0 16px;
+        font-weight: bold;
+      }
+
+      .button-wrap {
+        padding: 32px 0;
+        margin: 0 -16px -16px 0;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .button {
+        color: #1d4289;
+        padding: 8px;
+        margin: 0 16px 16px 0;
+        background-color: #f5f5f7;
+        border: 0;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: background-color 0.1s ease-in-out;
+      }
+
+      .button:hover {
+        background-color: #e0e0e8;
+      }
+
+      .code {
+        width: 100%;
+        padding: 16px;
+        margin: 0;
+        border-radius: 2px;
+      }
+
+      .dark {
+        background-color: #222;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <span class="title">1</span
+        ><span id="init-state" class="init-state">Before initialization</span>
+      </div>
+      <div class="button-wrap">
+        <button class="button" onclick="toggleUserId()">Toggle UserId</button>
+        <button class="button" onclick="toggleTags()">Toggle Tags</button>
+        <button class="button" onclick="toggleIsSubscribed()">
+          Toggle IsSubscribed
+        </button>
+        <!-- <button class="button" onclick="unsubscribe()">Unsubscribe</button> -->
+      </div>
+      <pre id="converted-notification" class="code dark"></pre>
+    </div>
+
+    <!-- Serve된 정적 SDK -->
+    <script
+      src="https://cdn.flarelane.com/WebSDK.js"
+      type="text/javascript"
+    ></script>
+    <script>
+      (async () => {
+        const _initState = document.getElementById("init-state");
+
+        const _code = document.getElementById("converted-notification");
+
+        _code.innerText = "Converted Notification\n\n" + "null";
+
+        FlareLane.setLogLevel("verbose");
+
+        FlareLane.setConvertedHandler((notification) => {
+          _code.innerText =
+            "Converted Notification\n\n" +
+            JSON.stringify(notification, null, 2);
+        });
+
+        await FlareLane.initialize({
+          projectId: "1",
+        });
+
+        _initState.innerText = "Initialized";
+      })();
+
+      const userId = "myuser@flarelane.com";
+      const tags = { age: 27, gender: "men" };
+      const tagkeys = Object.keys(tags);
+      const state = {
+        setUserId: false,
+        setTags: false,
+        isSubscribed: false,
+      };
+
+      async function toggleUserId() {
+        await FlareLane.setUserId(state.setUserId ? null : userId);
+
+        state.setUserId = !state.setUserId;
+      }
+
+      async function toggleTags() {
+        if (state.setTags) {
+          await FlareLane.deleteTags(tagkeys);
+        } else {
+          await FlareLane.setTags(tags);
+        }
+
+        state.setTags = !state.setTags;
+      }
+
+      async function toggleIsSubscribed() {
+        await FlareLane.setIsSubscribed(state.isSubscribed);
+
+        state.isSubscribed = !state.isSubscribed;
+      }
+
+      // async function unsubscribe() {
+      //   await FlareLane.unsubscribe();
+      // }
+    </script>
+  </body>
+</html>
