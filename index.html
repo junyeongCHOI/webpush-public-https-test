@@ -51,7 +51,6 @@
 
       .button-wrap {
         padding: 32px 0;
-        margin: 0 -16px -16px 0;
         display: flex;
         flex-wrap: wrap;
       }
@@ -81,6 +80,13 @@
       .dark {
         background-color: #222;
         color: #fff;
+      }
+
+      @media screen and (max-width: 768px) {
+        .container {
+          width: 100%;
+          padding: 32px 16px;
+        }
       }
     </style>
   </head>
@@ -123,7 +129,7 @@
         });
 
         await FlareLane.initialize({
-          projectId: "85912cdd-e3e1-490e-98a6-7ce272cb4a6a",
+          projectId: "2ac01b9e-9b6f-4f96-b58e-1756c744e49c",
         });
 
         _initState.innerText = "Initialized";
