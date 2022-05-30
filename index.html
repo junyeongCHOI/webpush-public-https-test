@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="./favicon.png" />
-    <title>FlareLane Web Push SDK Test - Public https</title>
+    <title>FlareLane Web Push SDK Test - Public direct https</title>
     <style>
       html,
       body {
@@ -70,6 +70,10 @@
         background-color: #e0e0e8;
       }
 
+      .black {
+        color: #222;
+      }
+
       .code {
         width: 100%;
         padding: 16px;
@@ -93,8 +97,8 @@
   <body>
     <div class="container">
       <div>
-        <span class="title">FlareLane Web Push SDK Test - Public https</span
-        ><span id="init-state" class="init-state">Before initialization</span>
+        <span class="title">FlareLane Web Push SDK Test - Public direct https</span>
+        <span id="init-state" class="init-state">Before initialization</span>
       </div>
       <div class="button-wrap">
         <button class="button" onclick="toggleUserId()">Toggle UserId</button>
@@ -102,9 +106,16 @@
         <button class="button" onclick="toggleIsSubscribed()">
           Toggle IsSubscribed
         </button>
-        <!-- <button class="button" onclick="unsubscribe()">Unsubscribe</button> -->
+        <button class="button" onclick="promptAndSubscribe()">
+          promptAndSubscribe()
+        </button>
       </div>
       <pre id="converted-notification" class="code dark"></pre>
+      <div class="button-wrap">
+        <button id="tracer" class="button black" onclick="toggleTracer()">
+          Tracer On
+        </button>
+      </div>
     </div>
 
     <!-- Serve된 정적 SDK -->
@@ -113,7 +124,24 @@
       type="text/javascript"
     ></script>
     <script>
+      const tracerKey = "flarelane_isTracerActivate";
+      const tracer = document.getElementById("tracer");
+
+      function checkTracer() {
+        const isTracerActivate = localStorage.getItem(tracerKey) === "true";
+
+        if (isTracerActivate) {
+          tracer.innerText = "Tracer Off";
+        } else {
+          tracer.innerText = "Tracer On";
+        }
+
+        return isTracerActivate;
+      }
+
       (async () => {
+        checkTracer();
+
         const _initState = document.getElementById("init-state");
 
         const _code = document.getElementById("converted-notification");
@@ -129,7 +157,7 @@
         });
 
         await FlareLane.initialize({
-          projectId: "2ac01b9e-9b6f-4f96-b58e-1756c744e49c",
+          projectId: "0692874f-19ea-4fff-8b05-60fd10673b8a",
         });
 
         _initState.innerText = "Initialized";
@@ -137,7 +165,7 @@
 
       const userId = "myuser@flarelane.com";
       const tags = { age: 27, gender: "men" };
-      const tagkeys = Object.keys(tags);
+      const tagsNull = { age: null, gender: null };
       const state = {
         setUserId: false,
         setTags: false,
@@ -151,11 +179,7 @@
       }
 
       async function toggleTags() {
-        if (state.setTags) {
-          await FlareLane.deleteTags(tagkeys);
-        } else {
-          await FlareLane.setTags(tags);
-        }
+        await FlareLane.setTags(state.setTags ? tagsNull : tags);
 
         state.setTags = !state.setTags;
       }
@@ -166,9 +190,19 @@
         state.isSubscribed = !state.isSubscribed;
       }
 
-      // async function unsubscribe() {
-      //   await FlareLane.unsubscribe();
-      // }
+      async function promptAndSubscribe() {
+        await FlareLane.promptAndSubscribe();
+      }
+
+      function toggleTracer() {
+        if (checkTracer()) {
+          localStorage.setItem(tracerKey, "false");
+          checkTracer();
+        } else {
+          localStorage.setItem(tracerKey, "true");
+          checkTracer();
+        }
+      }
     </script>
   </body>
 </html>
