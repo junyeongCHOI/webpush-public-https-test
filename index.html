@@ -143,6 +143,16 @@
         return isTracerActivate;
       }
 
+      function getIsSubscribed() {
+        document.getElementById('isSubscribed').innerText = '-';
+
+        FlareLane.getIsSubscribed((isSubscribed) => {
+          document.getElementById('isSubscribed').innerText = isSubscribed;
+          state.isSubscribed = !isSubscribed;
+          checkState();
+        });
+      }
+
       (async () => {
         checkTracer();
         checkState();
@@ -158,6 +168,8 @@
         FlareLane.setConvertedHandler((notification) => {
           _code.innerText = 'Converted Notification\n\n' + JSON.stringify(notification, null, 2);
         });
+
+        getIsSubscribed();
 
         await FlareLane.initialize({
           projectId: '0692874f-19ea-4fff-8b05-60fd10673b8a',
@@ -200,16 +212,6 @@
           localStorage.setItem(tracerKey, 'true');
           checkTracer();
         }
-      }
-
-      function getIsSubscribed() {
-        document.getElementById('isSubscribed').innerText = '-';
-
-        FlareLane.getIsSubscribed((isSubscribed) => {
-          document.getElementById('isSubscribed').innerText = isSubscribed;
-          state.isSubscribed = !isSubscribed;
-          checkState();
-        });
       }
     </script>
   </body>
