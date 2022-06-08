@@ -169,11 +169,6 @@
       const userId = 'myuser@flarelane.com';
       const tags = { age: 27, gender: 'men' };
       const tagsNull = { age: null, gender: null };
-      const state = {
-        setUserId: false,
-        setTags: false,
-        isSubscribed: false,
-      };
 
       async function toggleUserId() {
         await FlareLane.setUserId(state.setUserId ? null : userId);
